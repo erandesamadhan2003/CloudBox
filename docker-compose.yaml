@@ -1,0 +1,25 @@
+services:
+  cloudbox-dev:
+    container_name: cloudbox-dev
+    build:
+      context: .
+      target: dev
+    ports:
+      - "5173:5173"
+    env_file:
+      - .env.local
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    command: bun run dev --host 0.0.0.0 --port 5173
+
+  cloudbox-prod:
+    container_name: cloudbox-prod
+    build:
+      context: .
+      target: prod
+      args:
+        VITE_SUPABASE_URL: ${VITE_SUPABASE_URL}
+        VITE_SUPABASE_ANON_KEY: ${VITE_SUPABASE_ANON_KEY}
+    ports:
+      - "8080:80"

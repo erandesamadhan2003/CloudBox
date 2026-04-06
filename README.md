@@ -1,73 +1,72 @@
-# React + TypeScript + Vite
+# CloudBox
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+CloudBox is a file management web application built with React, TypeScript, and Supabase.
+It supports authentication, folders, file upload, sharing, public links, and trash recovery.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- React + TypeScript + Vite
+- Supabase (Auth, Postgres, Storage)
+- Tailwind CSS
+- React Router
 
-## React Compiler
+## Requirements
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Node.js 18+
+- Bun 1.0+
+- A Supabase project
 
-## Expanding the ESLint configuration
+## Environment Setup
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Copy the environment template and provide your Supabase values.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+1. Create `.env.local` in the project root.
+2. Copy values from `.env.example`.
+3. Fill these variables:
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_ANON_KEY`
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+You can find both in Supabase Dashboard:
+Project Settings -> API.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Supabase Setup (Important)
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Create a Storage bucket named `files`.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+This project uploads files using:
+
+- storage bucket: `files`
+- path format: `<user_id>/<generated_filename>`
+
+If the bucket is missing, file previews/public URLs will fail with:
+`Bucket not found`.
+
+## How to Start
+
+Install dependencies:
+
+`bun install`
+
+Run development server:
+
+`bun run dev`
+
+Build for production:
+
+`bun run build`
+
+Preview production build locally:
+
+`bun run preview`
+
+## Application Routes
+
+- `/login` - Login
+- `/signup` - Signup
+- `/dashboard` - Overview (recent files + stats)
+- `/dashboard/files` - My Files (folders + all files)
+- `/dashboard/shared` - Shared with me
+- `/dashboard/public` - Public files
+- `/dashboard/trash` - Trash
+- `/dashboard/folder/:folderId` - Folder contents

@@ -4,7 +4,6 @@ import {
     Navigate,
     Route,
     Routes,
-    useLocation,
     useNavigate,
 } from "react-router-dom";
 
@@ -14,6 +13,7 @@ import Login from "@/pages/auth/Login";
 import Signup from "@/pages/auth/Signup";
 import Dashboard from "@/pages/dashboard";
 import MyFiles from "@/pages/MyFiles";
+import Home from "@/pages/Home";
 import Shared from "@/pages/Shared";
 import Public from "@/pages/Public";
 import Trash from "@/pages/Trash";
@@ -95,17 +95,13 @@ function LoadingScreen() {
 /* ── Route guard ── */
 function AppRoutes() {
     const { user, isLoading, login, signup, authError, clearError } = useAuth();
-    const location = useLocation();
 
     if (isLoading) return <LoadingScreen />;
 
-    /* Redirect root */
-    if (location.pathname === "/") {
-        return <Navigate to={user ? "/dashboard" : "/login"} replace />;
-    }
-
     return (
         <Routes>
+            <Route path="/" element={<Home isAuthenticated={Boolean(user)} />} />
+
             {/* ── Auth routes ── */}
             <Route
                 path="/login"
@@ -163,9 +159,7 @@ function AppRoutes() {
             {/* Fallback */}
             <Route
                 path="*"
-                element={
-                    <Navigate to={user ? "/dashboard" : "/login"} replace />
-                }
+                element={<Navigate to="/" replace />}
             />
         </Routes>
     );

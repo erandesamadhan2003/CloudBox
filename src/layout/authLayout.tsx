@@ -1,5 +1,6 @@
 import type { PropsWithChildren } from "react";
 import { useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 import {
     BsCloudArrowUpFill,
     BsShieldLockFill,
@@ -344,9 +345,19 @@ export default function AuthLayout({
                     {/* Injected children (Login / Signup form) */}
                     <div className="w-full">{children}</div>
 
+                    <div className="mt-5 text-center">
+                        <Link
+                            to="/"
+                            className="text-sm text-white/55 transition hover:text-white"
+                            style={{ fontFamily: "'DM Sans', sans-serif" }}
+                        >
+                            Back to Home
+                        </Link>
+                    </div>
+
                     {/* Footer */}
                     <p
-                        className="mt-8 text-center text-xs text-white/25"
+                        className="mt-5 text-center text-xs text-white/25"
                         style={{ fontFamily: "'DM Sans', sans-serif" }}
                     >
                         © {new Date().getFullYear()} CloudBox · All rights

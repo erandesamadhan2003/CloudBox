@@ -132,8 +132,19 @@ export async function getFileUrl(
 ): Promise<{ url: string | null; error?: string }> {
     if (isPublic) {
         const { data } = supabase.storage.from("files").getPublicUrl(filePath);
-        return { url: data.publicUrl };
+
+        // Public URL can fail at runtime if bucket public access is misconfigured.
+        // In that case, gracefully fall back to a signed URL.
+        try {
+            const probe = await fetch(data.publicUrl, { method: "HEAD" });
+            if (probe.ok) {
+                return { url: data.publicUrl };
+            }
+        } catch {
+            // Ignore probe/network errors and try signed URL below.
+        }
     }
+
     const { data, error } = await supabase.storage
         .from("files")
         .createSignedUrl(filePath, 3600);

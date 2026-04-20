@@ -6,6 +6,7 @@ import {
     type SharePermission,
 } from "@/api/services/share.service";
 import FileCard from "@/components/FileCard";
+import CreateFolderModal from "@/components/CreateFolderModal";
 import FolderCard from "@/components/FolderCard";
 import ShareModal from "@/components/ShareModal";
 import UploadModal from "@/components/UploadModal";
@@ -26,6 +27,7 @@ export default function MyFiles() {
     const {
         folders,
         isLoading: foldersLoading,
+        createFolder,
         deleteFolder,
         renameFolder,
     } = useFolders(null);
@@ -66,9 +68,11 @@ export default function MyFiles() {
     };
 
     const RenameDialog = ({
+        title,
         onConfirm,
         onCancel,
     }: {
+        title: string;
         onConfirm: () => void;
         onCancel: () => void;
     }) => (
@@ -90,7 +94,7 @@ export default function MyFiles() {
                     className="mb-4 text-lg font-bold text-white"
                     style={{ fontFamily: "'Sora', sans-serif" }}
                 >
-                    Rename File
+                    {title}
                 </h3>
                 <input
                     type="text"
@@ -288,6 +292,11 @@ export default function MyFiles() {
                 onClose={() => setUploadOpen(false)}
                 onUpload={uploadFile}
             />
+            <CreateFolderModal
+                isOpen={folderOpen}
+                onClose={() => setFolderOpen(false)}
+                onCreate={createFolder}
+            />
             <ShareModal
                 isOpen={Boolean(sharingFile)}
                 file={sharingFile}
@@ -297,8 +306,16 @@ export default function MyFiles() {
 
             {renamingFile && (
                 <RenameDialog
+                    title="Rename File"
                     onConfirm={() => void handleRenameFile()}
                     onCancel={() => setRenamingFile(null)}
+                />
+            )}
+            {renamingFolder && (
+                <RenameDialog
+                    title="Rename Folder"
+                    onConfirm={() => void handleRenameFolder()}
+                    onCancel={() => setRenamingFolder(null)}
                 />
             )}
         </div>

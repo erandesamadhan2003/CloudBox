@@ -13,13 +13,11 @@ CMD ["bun", "run", "dev", "--host", "0.0.0.0", "--port", "5173"]
 FROM deps AS build
 COPY . .
 
-
-ARG VITE_SUPABASE_URL
-ARG VITE_SUPABASE_ANON_KEY
-ENV VITE_SUPABASE_URL=$VITE_SUPABASE_URL
-ENV VITE_SUPABASE_ANON_KEY=$VITE_SUPABASE_ANON_KEY
-
-RUN bun run build
+RUN if [ ! -f .env.local ]; then echo ".env.local not found in build context" && exit 1; fi \
+	&& set -a \
+	&& . ./.env.local \
+	&& set +a \
+	&& bun run build
 
 FROM nginx:1.27-alpine AS prod
 
